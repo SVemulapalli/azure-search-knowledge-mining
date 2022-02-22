@@ -177,14 +177,17 @@ function GetFileHTML(data, result) {
     var filename = result.metadata_storage_name; // blob filename
     var path = data.decodedPath + data.token; // direct path to blob with auth token
 
-    video_indexer_url = data.result.video_indexer_url;
+    video_indexer_url = data.result.video_indexer_url_token;
 
     if (video_indexer_url !== null && video_indexer_url !== undefined) {//Implement check on metadata to identify video coming from video indexer
         srcPlayer = video_indexer_url;
-        time_reference = data.result.time_reference ? data.result.time_reference : 0;
-        srcPlayer += '?t=' + time_reference;
 
+        time_reference = data.result.time_reference ? data.result.time_reference : "0";
+        time_reference = "&t=" + time_reference;
+
+        srcPlayer += time_reference;
         srcInsights = video_indexer_url.replace("videoindexer.ai/embed/player/", "videoindexer.ai/embed/insights/");
+
 
         //fileContainerHTML = `<iframe class="file-container" src="${src}" frameborder = "0" allowfullscreen></iframe>`;
 

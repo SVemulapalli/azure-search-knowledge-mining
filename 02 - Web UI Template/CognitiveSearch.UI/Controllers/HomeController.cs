@@ -17,12 +17,15 @@ namespace CognitiveSearch.UI.Controllers
         private DocumentSearchClient _docSearch { get; set; }
         private DocumentSearchClient _timeReferenceSearch { get; set; }
 
+        private VideoAnalyzerClient _videoClient { get; set; }
+
         private string _configurationError { get; set; }
 
         public HomeController(IConfiguration configuration)
         {
             _configuration = configuration;
             InitializeDocSearch();
+            InitializeVideoClient();
         }
 
         private void InitializeDocSearch()
@@ -38,6 +41,19 @@ namespace CognitiveSearch.UI.Controllers
                 _configurationError = $"The application settings are possibly incorrect. The server responded with this message: " + e.Message.ToString();
             }
         }
+
+        private void InitializeVideoClient()
+        {
+            try
+            {
+                _videoClient = new VideoAnalyzerClient(_configuration);
+            }
+            catch (Exception e)
+            {
+                _configurationError = $"The application settings are possibly incorrect. The server responded with this message: " + e.Message.ToString();
+            }
+        }
+
 
         /// <summary>
         /// Checks that the search client was intiailized successfully.
@@ -133,9 +149,14 @@ namespace CognitiveSearch.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetDocumentById(string id = "")
+        public async System.Threading.Tasks.Task<IActionResult> GetDocumentByIdAsync(string id = "")
         {
             var result = _docSearch.GetDocumentById(id);
+
+            if (result.Result.GetString("video_indexer_url") != null)
+            {
+                result.Result.Add("video_indexer_url_token", await _videoClient.GetAccessToken(result.Result.GetString("id")));
+            }
 
             return new JsonResult(result);
         }
