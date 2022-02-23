@@ -71,7 +71,7 @@ function ShowDocument(id, index) {
             }
 
             // Set visibility for search bar in File panel
-            fileSearchBar = data.result.video_indexer_url ? false : true;
+            fileSearchBar = data.result.video_indexer_url_token ? false : true;
             SearchBarVisibility(fileSearchBar);
 
             pivotLinksHTML += '<li id="file-pivot-link" class="ms-Pivot-link is-selected" data-content="file" title="File" tabindex="1" onclick="SearchBarVisibility(' + fileSearchBar + ')">' + fileName + '</li>';
@@ -295,7 +295,7 @@ function GetTranscriptHTML(result) {
     else
     {
         // otherwise, let's try getting the content -- although it won't have any image data.
-        full_content = result.content.trim();
+        full_content = result.content?.trim();
     }
 
     if (full_content === null || full_content === "")

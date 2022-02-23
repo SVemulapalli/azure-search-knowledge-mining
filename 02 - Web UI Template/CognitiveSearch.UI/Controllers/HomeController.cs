@@ -153,7 +153,7 @@ namespace CognitiveSearch.UI.Controllers
         {
             var result = _docSearch.GetDocumentById(id);
 
-            if (result.Result.GetString("video_indexer_url") != null)
+            if (result.Result.GetString("id") != null)
             {
                 result.Result.Add("video_indexer_url_token", await _videoClient.GetAccessToken(result.Result.GetString("id")));
             }
