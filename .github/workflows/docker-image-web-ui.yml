@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Azure Container Registry Login
+      uses: Azure/docker-login@v1
+      with:
+        # Container registry username
+        username: ${{ secrets.ACR_USERNAME }}
+        # Container registry password
+        password: ${{ secrets.ACR_USERNAME }}
+        # Container registry server url
+        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+        
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file "02 - Web UI Template/Dockerfile" --tag videokm.azurecr.io/video-ui:latest; docker push videokm.azurecr.io/video-ui:latest
+      
+
