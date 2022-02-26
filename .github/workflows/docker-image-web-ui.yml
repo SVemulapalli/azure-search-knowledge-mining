@@ -27,6 +27,6 @@ jobs:
         
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file "02 - Web UI Template/Dockerfile" --tag videokm.azurecr.io/video-ui:latest; docker push videokm.azurecr.io/video-ui:latest
+      run: cd "02 - Web UI Template" ; docker build . --tag videokm.azurecr.io/web-ui:latest; docker push videokm.azurecr.io/web-ui:latest
       
 
