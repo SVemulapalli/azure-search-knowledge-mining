@@ -23,6 +23,10 @@ function ShowDocument(id, index) {
 
             // Transcript Tab Content
             var transcriptContainerHTML = GetTranscriptHTML(result);
+            if (data.decodedPath.toLowerCase().includes(".htm")){
+                fileContainerHTML = GetTranscriptHTML(result);
+            }
+
 
             // Metadata Tab Content 
             var metadataContainerHTML = GetMetadataHTML(result);
