@@ -86,8 +86,8 @@ function ShowDocument(id, index) {
 
             pivotLinksHTML += '<li id="metadata-pivot-link" class="ms-Pivot-link" data-content="metadata" title="Metadata" tabindex="1" onclick="SearchBarVisibility(false)">Metadata</li>';
 
-            if (result.geoLocation !== undefined && result.geoLocation !== null) {
-                pivotLinksHTML += '<li id="maps-pivot-link" class="ms-Pivot-link" data-content="maps" title="Maps" tabindex="1">Maps</li>';
+            if (result.geoLocation !== null) {
+                pivotLinksHTML += '<li id="maps-pivot-link" class="ms-Pivot-link" data-content="maps" title="Maps" tabindex="1" onclick="SearchBarVisibility(false)">Maps</li>';
 
             var tagContainerHTML = GetTagsHTML(result);
 
