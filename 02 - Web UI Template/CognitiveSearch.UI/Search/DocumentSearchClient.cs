@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace CognitiveSearch.UI
 {
@@ -175,29 +176,53 @@ namespace CognitiveSearch.UI
                 foreach (var item in searchFacets)
                 {
                     var facet = Model.Facets.Where(f => f.Name == item.Key).FirstOrDefault();
-
+                    
                     filterStr = string.Join(",", item.Value);
 
-                    // Construct Collection(string) facet query
-                    if (facet.Type == typeof(string[]))
+                    if (facet == null)
                     {
-                        if (string.IsNullOrEmpty(filter))
-                            filter = $"{item.Key}/any(t: search.in(t, '{filterStr}', ','))";
-                        else
-                            filter += $" and {item.Key}/any(t: search.in(t, '{filterStr}', ','))";
+                        facet = Model.Facets.Where(f => item.Key == f.Name.Split('/').Last()).FirstOrDefault();
+                        var level1 = facet.Name.Split('/').First();
+                        var level2 = facet.Name.Split('/').Last();
+
+                        if (facet.Type == typeof(string[]))
+                        {
+                            if (string.IsNullOrEmpty(filter))
+                                filter = $"{level1}/any(t: search.in(t/{level2}, '{filterStr}'))";
+                            else 
+                                filter += $" and {level1}/any(t: search.in(t/{level2}, '{filterStr}'))";
+                        }
+                        else if (facet.Type == typeof(string))
+                        {
+                            if (string.IsNullOrEmpty(filter))
+                                filter = $"{level1}/{level2} eq '{filterStr}'";
+                            else
+                                filter += $" and {level1}/{level2} eq '{filterStr}'";
+                        }
                     }
-                    // Construct string facet query
-                    else if (facet.Type == typeof(string))
-                    {
-                        if (string.IsNullOrEmpty(filter))
-                            filter = $"{item.Key} eq '{filterStr}'";
-                        else
-                            filter += $" and {item.Key} eq '{filterStr}'";
-                    }
-                    // Construct DateTime facet query
-                    else if (facet.Type == typeof(DateTime))
-                    {
-                        // TODO: Date filters
+
+                    else{
+                        // Construct Collection(string) facet query
+                        if (facet.Type == typeof(string[]))
+                        {
+                            if (string.IsNullOrEmpty(filter))
+                                filter = $"{item.Key}/any(t: search.in(t, '{filterStr}', ','))";
+                            else
+                                filter += $" and {item.Key}/any(t: search.in(t, '{filterStr}', ','))";
+                        }
+                        // Construct string facet query
+                        else if (facet.Type == typeof(string))
+                        {
+                            if (string.IsNullOrEmpty(filter))
+                                filter = $"{item.Key} eq '{filterStr}'";
+                            else
+                                filter += $" and {item.Key} eq '{filterStr}'";
+                        }
+                        // Construct DateTime facet query
+                        else if (facet.Type == typeof(DateTime))
+                        {
+                            // TODO: Date filters
+                        }         
                     }
                 }
             }
