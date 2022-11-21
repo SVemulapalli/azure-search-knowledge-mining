@@ -505,51 +505,51 @@ namespace CognitiveSearch.UI
 
         private static string Base64Decode(string input)
         {
-            if (input == null) throw new ArgumentNullException("input");
-            int inputLength = input.Length;
-            if (inputLength < 1) return null;
+           if (input == null) throw new ArgumentNullException("input");
+           int inputLength = input.Length;
+           if (inputLength < 1) return null;
 
-            // Get padding chars
-            int numPadChars = (int)input[inputLength - 1] - (int)'0';
-            if (numPadChars < 0 || numPadChars > 10)
-            {
-                var x = input.Substring(input.Length - 2, 2);
-                if (x != "==")
-                    return null;
-                else
-                    numPadChars = 1;
-            }
+           // Get padding chars
+           int numPadChars = (int)input[inputLength - 1] - (int)'0';
+           if (numPadChars < 0 || numPadChars > 10)
+           {
+               var x = input.Substring(input.Length - 2, 2);
+               if (x != "==")
+                   return null;
+               else
+                   numPadChars = 1;
+           }
 
-            // replace '-' and '_'
-            char[] base64Chars = new char[inputLength - 1 + numPadChars];
-            for (int iter = 0; iter < inputLength - 1; iter++)
-            {
-                char c = input[iter];
+           // replace '-' and '_'
+           char[] base64Chars = new char[inputLength - 1 + numPadChars];
+           for (int iter = 0; iter < inputLength - 1; iter++)
+           {
+               char c = input[iter];
 
-                switch (c)
-                {
-                    case '-':
-                        base64Chars[iter] = '+';
-                        break;
+               switch (c)
+               {
+                   case '-':
+                       base64Chars[iter] = '+';
+                       break;
 
-                    case '_':
-                        base64Chars[iter] = '/';
-                        break;
+                   case '_':
+                       base64Chars[iter] = '/';
+                       break;
 
-                    default:
-                        base64Chars[iter] = c;
-                        break;
-                }
-            }
+                   default:
+                       base64Chars[iter] = c;
+                       break;
+               }
+           }
 
-            // Add padding chars
-            for (int iter = inputLength - 1; iter < base64Chars.Length; iter++)
-            {
-                base64Chars[iter] = '=';
-            }
+           // Add padding chars
+           for (int iter = inputLength - 1; iter < base64Chars.Length; iter++)
+           {
+               base64Chars[iter] = '=';
+           }
 
-            var charArray = Convert.FromBase64CharArray(base64Chars, 0, base64Chars.Length);
-            return System.Text.Encoding.Default.GetString(charArray);
+           var charArray = Convert.FromBase64CharArray(base64Chars, 0, base64Chars.Length);
+           return System.Text.Encoding.Default.GetString(charArray);
         }
 
         /// <summary>
