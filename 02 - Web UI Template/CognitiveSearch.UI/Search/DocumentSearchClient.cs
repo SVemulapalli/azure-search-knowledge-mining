@@ -513,11 +513,7 @@ namespace CognitiveSearch.UI
            int numPadChars = (int)input[inputLength - 1] - (int)'0';
            if (numPadChars < 0 || numPadChars > 10)
            {
-               var x = input.Substring(input.Length - 2, 2);
-               if (x != "==")
                    return null;
-               else
-                   numPadChars = 1;
            }
 
            // replace '-' and '_'
